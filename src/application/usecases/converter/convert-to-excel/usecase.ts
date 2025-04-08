@@ -8,6 +8,7 @@ import * as process from 'node:process';
 import { fromPath } from 'pdf2pic';
 import * as xlsx from 'xlsx';
 import { recognize } from 'tesseract.js';
+import * as pdf from 'pdf-parse';
 
 @Injectable()
 export class ConvertToExcelUseCase {
@@ -37,17 +38,17 @@ export class ConvertToExcelUseCase {
 
     const mimeType = mime.lookup(filePath);
     const isPdf = mimeType === 'application/pdf';
-    let images = [];
+    let text;
 
     if (isPdf) {
-      console.log('Converting PDF to image(s)...');
-      images = await this.convertPDFtoImages(filePath);
-    }
-    let text;
-    if (typeof mimeType === 'string' && mimeType.startsWith('image/')) {
+      const dataBuffer = fs.readFileSync(filePath);
+      // console.log('Converting PDF to image(s)...');
+      // images = await this.convertPDFtoImages(filePath);
+      const data = await pdf(dataBuffer);
+      text = data.text;
+    } else if (typeof mimeType === 'string' && mimeType.startsWith('image/')) {
       console.log('entered images');
       text = await this.extractTextFromImage(filePath);
-      // images = [filePath] as never;
     } else {
       throw new Error('Unsupported file type');
     }
@@ -56,6 +57,7 @@ export class ConvertToExcelUseCase {
     // const imageBuffers = await Promise.all(images.map(img => readFile(img, {encoding: 'base64'})));
 
     const cleanedText = text.replace(/\s{2,}/g, ' ').trim();
+    console.log("cleanedText", cleanedText);
     const messages = [
       {
         role: 'user',
@@ -68,16 +70,17 @@ export class ConvertToExcelUseCase {
         ],
       },
     ];
+    console.log("chatgpt message", messages[0].content);
 
     console.time('chatgpt');
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-3.5-turbo',
       messages,
       max_tokens: 2000,
-      temperature: 0
+      temperature: 0,
     }, {
       headers: {
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        Authorization: `Bearer`,
         'Content-Type': 'application/json',
       },
     });
