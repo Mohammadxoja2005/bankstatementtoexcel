@@ -31,45 +31,40 @@ export class ConvertToExcelUseCase {
     return outputPath;
   }
 
-  public async processFile(filePath, fileName: string): Promise<string> {
+  public async processFile(
+    filePath: string,
+    fileName: string,
+  ): Promise<string> {
     const mimeType = mime.lookup(filePath);
     let pages;
 
     if (mimeType === 'application/pdf') {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       pages = await this.extractPages(filePath);
     } else if (typeof mimeType === 'string' && mimeType.startsWith('image/')) {
       pages = await this.extractTextFromImage(filePath);
     } else {
-      throw new Error('Unsupported file type');
+      throw new Error('Unsupported application/pdfile type');
     }
-    console.log('pages', pages);
+
     const response = await Promise.all(
       pages.map((chunk) => this.sendToGPT(chunk)),
     );
     // @ts-ignore
     const result = [];
-    console.log('response1', response);
     for (const res of response) {
       // @ts-ignore
-      console.log('res1', res);
       const arr = JSON.parse(res);
-      console.log('arr', arr);
       // @ts-ignore
       result.push(...arr);
     }
 
-    const cleanedData = result;
-
-    console.time('toconversion');
-    const worksheet = xlsx.utils.json_to_sheet(cleanedData);
-
-    const keys = Object.keys(cleanedData[0]);
+    const worksheet = xlsx.utils.json_to_sheet(result);
+    const keys = Object.keys(result[0]);
     worksheet['!cols'] = keys.map((key) => {
       const maxLength = Math.max(
         key.length,
         // @ts-ignore
-        ...cleanedData.map((row) => row[key]?.toString().length || 0),
+        ...result.map((row) => row[key]?.toString().length || 0),
       );
       return { wch: maxLength + 2 };
     });
@@ -118,7 +113,6 @@ export class ConvertToExcelUseCase {
       },
     ];
 
-    console.time('chatgpt');
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       {
@@ -134,7 +128,6 @@ export class ConvertToExcelUseCase {
         },
       },
     );
-    console.timeEnd('chatgpt');
 
     return response.data.choices[0].message.content;
   }
