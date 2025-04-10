@@ -1,10 +1,9 @@
-import {Module} from "@nestjs/common";
-import {ConverterController} from "../../api/converter";
-import {ConvertToExcelUseCase} from "../../usecases/converter/convert-to-excel";
+import { Module } from '@nestjs/common';
+import { ConverterController } from 'app/application/api/converter';
+import { ConvertToExcelUseCase } from 'app/application/usecases/converter/convert-to-excel';
 
 @Module({
-    providers: [ConvertToExcelUseCase],
-    controllers: [ConverterController]
+  providers: [ConvertToExcelUseCase],
+  controllers: [ConverterController],
 })
-export class ConverterModule {
-}
+export class ConverterModule {}
