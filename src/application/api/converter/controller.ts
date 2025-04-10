@@ -1,7 +1,6 @@
 import {
   Controller,
   Post,
-  Get,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -9,11 +8,7 @@ import {
 import { ConvertToExcelUseCase } from '../../usecases/converter/convert-to-excel';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-
-export type File = {
-  originalname: string;
-  buffer: Buffer;
-};
+import { MulterFile } from 'app/domain';
 
 @Controller('converter')
 export class ConverterController {
@@ -22,10 +17,17 @@ export class ConverterController {
   @Post('convert_to_excel')
   @UseInterceptors(FileInterceptor('file'))
   async convertToExcel(
-    @UploadedFile() file: File,
+    @UploadedFile() file: MulterFile,
     @Res() response: Response,
   ): Promise<void> {
-    const result = await this.convertToExcelUseCase.execute({ file });
+    const result = await this.convertToExcelUseCase.execute({
+      file: {
+        originalName: file.originalname,
+        buffer: file.buffer,
+        mimeType: file.mimetype,
+        size: file.size,
+      },
+    });
 
     response.download(
       result,

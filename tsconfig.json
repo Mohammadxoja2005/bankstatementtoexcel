@@ -1,22 +1,36 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
+    "target": "es2016",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "sourceMap": false,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
-    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "noEmitHelpers": false,
+    "importHelpers": true,
     "outDir": "./build",
     "baseUrl": "./",
-    "incremental": true,
+    "declaration": false,
     "skipLibCheck": true,
     "strictNullChecks": true,
-    "types": [],
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "strict": false,
+    "newLine": "lf",
+    "lib": [
+      "es2017",
+      "esnext"
+    ],
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "app/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "resolveJsonModule": true,
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -7,14 +7,14 @@ import * as xlsx from 'xlsx';
 import { recognize } from 'tesseract.js';
 import * as pdf from 'pdf-parse';
 import * as path from 'node:path';
-import { File } from '../../../api/converter';
+import { InternalFile } from 'app/domain';
 
 @Injectable()
 export class ConvertToExcelUseCase {
   constructor() {}
 
-  public async execute(input: { file: File }): Promise<any> {
-    const fileName = `${Date.now()}-${input.file.originalname}`;
+  public async execute(input: { file: InternalFile }): Promise<string> {
+    const fileName = `${Date.now()}-${input.file.originalName}`;
 
     const tempPath = path.join(
       '/home/muhammad/me/bankstatementtoexcel',
