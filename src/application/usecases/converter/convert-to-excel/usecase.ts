@@ -75,7 +75,6 @@ export class ConvertToExcelUseCase {
       workbook,
       `/home/muhammad/me/bankstatementtoexcel/tmp/${fileName}.xlsx`,
     );
-    console.timeEnd('toconversion');
 
     return `/home/muhammad/me/bankstatementtoexcel/tmp/${fileName}.xlsx`;
   }
