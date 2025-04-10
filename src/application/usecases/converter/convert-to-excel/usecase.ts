@@ -1,31 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import axios from 'axios';
 import * as mime from 'mime-types';
 import * as process from 'node:process';
 import * as xlsx from 'xlsx';
 import { recognize } from 'tesseract.js';
 import * as pdf from 'pdf-parse';
+import * as path from 'node:path';
+import { File } from '../../../api/converter';
 
 @Injectable()
 export class ConvertToExcelUseCase {
   constructor() {}
 
-  public async execute(input: any): Promise<any> {}
+  public async execute(input: { file: File }): Promise<any> {
+    const fileName = `${Date.now()}-${input.file.originalname}`;
 
-  public async processFile(filePath) {
+    const tempPath = path.join(
+      '/home/muhammad/me/bankstatementtoexcel',
+      'tmp',
+      fileName,
+    );
+
+    await fs.writeFile(tempPath, input.file.buffer);
+
+    const outputPath = await this.processFile(tempPath, fileName);
+
+    await fs.unlink(tempPath);
+
+    return outputPath;
+  }
+
+  public async processFile(filePath, fileName: string): Promise<string> {
     const mimeType = mime.lookup(filePath);
-    const isPdf = mimeType === 'application/pdf';
     let pages;
 
-    if (isPdf) {
+    if (mimeType === 'application/pdf') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       pages = await this.extractPages(filePath);
     } else if (typeof mimeType === 'string' && mimeType.startsWith('image/')) {
       pages = await this.extractTextFromImage(filePath);
     } else {
       throw new Error('Unsupported file type');
     }
-
+    console.log('pages', pages);
     const response = await Promise.all(
       pages.map((chunk) => this.sendToGPT(chunk)),
     );
@@ -58,12 +76,17 @@ export class ConvertToExcelUseCase {
 
     const workbook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(workbook, worksheet, 'Transactions');
-    xlsx.writeFile(workbook, 'transactions.xlsx');
+    xlsx.writeFile(
+      workbook,
+      `/home/muhammad/me/bankstatementtoexcel/tmp/${fileName}.xlsx`,
+    );
     console.timeEnd('toconversion');
+
+    return `/home/muhammad/me/bankstatementtoexcel/tmp/${fileName}.xlsx`;
   }
 
   private async extractPages(pdfPath: string): Promise<any> {
-    const dataBuffer = fs.readFileSync(pdfPath);
+    const dataBuffer = await fs.readFile(pdfPath);
     const options = {
       pagerender: async (pageData: any) => {
         return pageData.getTextContent().then((content: any) => {
@@ -106,7 +129,7 @@ export class ConvertToExcelUseCase {
       },
       {
         headers: {
-          Authorization: `Bearer`,
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           'Content-Type': 'application/json',
         },
       },
@@ -126,19 +149,3 @@ export class ConvertToExcelUseCase {
     return text;
   }
 }
-
-(async () => {
-  console.time('overall');
-  const filePath = process.argv[2];
-  if (!filePath) {
-    console.error('❌ Please provide a file path');
-    process.exit(1);
-  }
-  const converter = new ConvertToExcelUseCase();
-  try {
-    await converter.processFile(filePath);
-  } catch (err) {
-    console.error('❌ Error:', err.message);
-  }
-  console.timeEnd('overall');
-})();

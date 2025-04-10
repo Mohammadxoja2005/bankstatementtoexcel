@@ -1,20 +1,40 @@
-import {Controller, Post, Req, Res} from "@nestjs/common";
-import {ConvertToExcelUseCase} from "../../usecases/converter/convert-to-excel";
+import {
+  Controller,
+  Post,
+  Get,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { ConvertToExcelUseCase } from '../../usecases/converter/convert-to-excel';
+import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller("converter")
+export type File = {
+  originalname: string;
+  buffer: Buffer;
+};
+
+@Controller('converter')
 export class ConverterController {
-    constructor(private readonly convertToExcelUseCase: ConvertToExcelUseCase) {
-    }
+  constructor(private readonly convertToExcelUseCase: ConvertToExcelUseCase) {}
 
-    @Post("convert_to_excel")
-    async convertToExcel(
-        @Req() request: Request,
-        @Res() response: Response
-    ): Promise<void> {
-        try {
+  @Post('convert_to_excel')
+  @UseInterceptors(FileInterceptor('file'))
+  async convertToExcel(
+    @UploadedFile() file: File,
+    @Res() response: Response,
+  ): Promise<void> {
+    const result = await this.convertToExcelUseCase.execute({ file });
 
-        } catch (error) {
-
+    response.download(
+      result,
+      `${file.originalname.split('.')[0]}.xlsx`,
+      (err) => {
+        if (err) {
+          console.error('Download error:', err);
         }
-    }
+      },
+    );
+  }
 }
