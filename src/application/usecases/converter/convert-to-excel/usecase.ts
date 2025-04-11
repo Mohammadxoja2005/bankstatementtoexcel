@@ -54,7 +54,6 @@ export class ConvertToExcelUseCase {
 
         const result = [];
         for (const res of response) {
-            // @ts-ignore
             const arr = JSON.parse(res);
             // @ts-ignore
             result.push(...arr);
