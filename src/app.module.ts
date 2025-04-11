@@ -1,8 +1,9 @@
 import {Module} from '@nestjs/common';
-import {ConverterModule} from "./application/common/converter/module";
+import {InfrastructureModule} from "app/infrastructure/module";
+import {ApplicationModule} from "app/application/module";
 
 @Module({
-    imports: [ConverterModule],
+    imports: [ApplicationModule, InfrastructureModule],
 })
 export class AppModule {
 }
