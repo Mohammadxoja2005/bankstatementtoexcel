@@ -4,9 +4,9 @@ import * as mime from "mime-types";
 import { recognize } from "tesseract.js";
 import * as pdf from "pdf-parse";
 import * as path from "node:path";
-import { InternalFile } from "app/domain";
+import { InternalFile, LanguageModelNames } from "app/domain";
 import { Infrastructure } from "app/common";
-import { LanguageModelManager, LanguageModelNames } from "app/infrastructure/language-model";
+import { LanguageModelManager } from "app/infrastructure/language-model";
 import { FileBuilderExcel } from "app/infrastructure/file-builder";
 
 @Injectable()

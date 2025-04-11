@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import * as xlsx from "xlsx";
-import { Input, Output } from "./build";
+import { BuildInput, BuildOutput } from "app/domain";
 
 @Injectable()
 export class FileBuilderExcel {
     constructor() {}
 
-    public build(input: Input): Output {
+    public build(input: BuildInput): BuildOutput {
         const worksheet = xlsx.utils.json_to_sheet(input.transactions);
         const keys = Object.keys(input[0]);
 

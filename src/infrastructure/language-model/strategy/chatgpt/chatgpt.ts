@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import axios from "axios";
 import * as process from "node:process";
-import { LanguageModelStrategy } from "app/infrastructure/language-model";
+import { LanguageModelStrategy } from "app/domain";
 
 @Injectable()
 export class LanguageModelChatGPT implements LanguageModelStrategy {

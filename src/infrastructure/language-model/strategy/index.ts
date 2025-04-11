@@ -1,2 +1,2 @@
 export * from "./chatgpt";
-export * from "./strategy";
+export * from "../../../domain/language-model/strategy";

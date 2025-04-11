@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Infrastructure } from "app/common";
-import { LanguageModelNames, LanguageModelStrategy } from "app/infrastructure/language-model";
+import { LanguageModelNames, LanguageModelStrategy } from "app/domain";
 
 @Injectable()
 export class LanguageModelManager {
