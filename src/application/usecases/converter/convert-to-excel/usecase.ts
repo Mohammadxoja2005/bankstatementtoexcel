@@ -1,13 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as fs from "fs/promises";
 import * as mime from "mime-types";
-import { recognize } from "tesseract.js";
-import * as pdf from "pdf-parse";
 import * as path from "node:path";
 import { InternalFile, LanguageModelNames } from "app/domain";
 import { Infrastructure } from "app/common";
 import { LanguageModelManager } from "app/infrastructure/language-model";
 import { FileBuilderExcel } from "app/infrastructure/file-builder";
+import { TextExtractorManager } from "app/infrastructure/text-extractor";
+import { MimeType } from "app/domain/text-extractor/types";
 
 @Injectable()
 export class ConvertToExcelUseCase {
@@ -16,6 +16,8 @@ export class ConvertToExcelUseCase {
         private readonly languageModelManager: LanguageModelManager,
         @Inject(Infrastructure.FileBuilder.Excel)
         private readonly fileBuilderExcel: FileBuilderExcel,
+        @Inject(Infrastructure.TextExtractor.Manager)
+        private readonly textExtractorManager: TextExtractorManager,
     ) {}
 
     public async execute(input: { file: InternalFile }): Promise<string> {
@@ -34,15 +36,9 @@ export class ConvertToExcelUseCase {
 
     public async processFile(filePath: string, fileName: string): Promise<string> {
         const mimeType = mime.lookup(filePath);
-        let pages;
 
-        if (mimeType === "application/pdf") {
-            pages = await this.extractPages(filePath);
-        } else if (typeof mimeType === "string" && mimeType.startsWith("image/")) {
-            pages = await this.extractTextFromImage(filePath);
-        } else {
-            throw new Error("Unsupported application/pdfile type");
-        }
+        const textExtractor = this.textExtractorManager.setTextExtractor(mimeType as MimeType);
+        const pages = await textExtractor.extract(filePath);
 
         const languageModel = this.languageModelManager.setLanguageModel(
             LanguageModelNames.ChatGPT,
@@ -65,32 +61,5 @@ export class ConvertToExcelUseCase {
             },
             transactions: result,
         });
-    }
-
-    private async extractPages(pdfPath: string): Promise<any> {
-        const dataBuffer = await fs.readFile(pdfPath);
-        const options = {
-            pagerender: async (pageData: any) => {
-                return pageData.getTextContent().then((content: any) => {
-                    const pageText = content.items.map((item: any) => item.str).join("");
-
-                    return pageText + "\n[[PAGE_BREAK]]";
-                });
-            },
-        };
-
-        const parsedPDF = await pdf(dataBuffer, options);
-
-        return parsedPDF.text.split("[[PAGE_BREAK]]").filter((page) => page.trim() !== "");
-    }
-
-    private async extractTextFromImage(imagePath) {
-        const {
-            data: { text },
-        } = await recognize(imagePath, "eng", {
-            logger: (m) => console.log(m.status),
-        });
-
-        return text;
     }
 }

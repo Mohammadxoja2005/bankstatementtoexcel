@@ -6,4 +6,9 @@ export const Infrastructure = {
     FileBuilder: {
         Excel: Symbol.for("ExcelFileBuilder"),
     },
+    TextExtractor: {
+        PDF: Symbol.for("TextExtractorPDF"),
+        Image: Symbol.for("TextExtractorImage"),
+        Manager: Symbol.for("TextExtractorManager"),
+    },
 };
