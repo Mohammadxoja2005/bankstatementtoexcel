@@ -12,7 +12,7 @@ export class TextExtractorManager {
         private readonly textImageExtractor: TextExtractorStrategy,
     ) {}
 
-    public setTextExtractor(mimeType: MimeType): TextExtractorStrategy {
+    public setExtractor(mimeType: MimeType): TextExtractorStrategy {
         if (mimeType === MimeType.PDF) {
             return this.textPdfExtractor;
         }

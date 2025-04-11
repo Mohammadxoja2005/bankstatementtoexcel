@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import * as fs from "fs/promises";
 import * as mime from "mime-types";
 import * as path from "node:path";
-import { InternalFile, LanguageModelNames } from "app/domain";
+import { InternalFile, LanguageModelNames, Transaction } from "app/domain";
 import { Infrastructure } from "app/common";
 import { LanguageModelManager } from "app/infrastructure/language-model";
 import { FileBuilderExcel } from "app/infrastructure/file-builder";
@@ -37,7 +37,7 @@ export class ConvertToExcelUseCase {
     public async processFile(filePath: string, fileName: string): Promise<string> {
         const mimeType = mime.lookup(filePath);
 
-        const textExtractor = this.textExtractorManager.setTextExtractor(mimeType as MimeType);
+        const textExtractor = this.textExtractorManager.setExtractor(mimeType as MimeType);
         const pages = await textExtractor.extract(filePath);
 
         const languageModel = this.languageModelManager.setLanguageModel(
@@ -48,10 +48,10 @@ export class ConvertToExcelUseCase {
             pages.map((chunk) => languageModel.extractTransactionsFromText(chunk)),
         );
 
-        const result = [];
+        const result: Transaction[] = [];
+
         for (const res of response) {
             const arr = JSON.parse(res);
-            // @ts-ignore
             result.push(...arr);
         }
 
