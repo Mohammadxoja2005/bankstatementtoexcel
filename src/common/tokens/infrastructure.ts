@@ -3,4 +3,7 @@ export const Infrastructure = {
         ChatGPT: Symbol.for("LanguageModelChatGPT"),
         Manager: Symbol.for("LanguageModelManager"),
     },
+    FileBuilder: {
+        Excel: Symbol.for("ExcelFileBuilder"),
+    },
 };
