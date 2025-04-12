@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import * as xlsx from "xlsx";
 import { BuildInput, BuildOutput } from "app/domain";
+import * as process from "node:process";
 
 @Injectable()
 export class FileBuilderExcel {
@@ -8,7 +9,7 @@ export class FileBuilderExcel {
 
     public build(input: BuildInput): BuildOutput {
         const worksheet = xlsx.utils.json_to_sheet(input.transactions);
-        const keys = Object.keys(input[0]);
+        const keys = Object.keys(input.transactions[0]);
 
         worksheet["!cols"] = keys.map((key) => {
             const maxLength = Math.max(
@@ -20,11 +21,8 @@ export class FileBuilderExcel {
 
         const workbook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(workbook, worksheet, "Transactions");
-        xlsx.writeFile(
-            workbook,
-            `/home/muhammad/me/bankstatementtoexcel/tmp/${input.file.name}.xlsx`,
-        );
+        xlsx.writeFile(workbook, `${process.env.BASE_PATH}/tmp/${input.file.name}.xlsx`);
 
-        return `/home/muhammad/me/bankstatementtoexcel/tmp/${input.file.name}.xlsx`;
+        return `${process.env.BASE_PATH}/tmp/${input.file.name}.xlsx`;
     }
 }

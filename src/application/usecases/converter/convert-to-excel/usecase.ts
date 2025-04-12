@@ -8,6 +8,7 @@ import { LanguageModelManager } from "app/infrastructure/language-model";
 import { FileBuilderExcel } from "app/infrastructure/file-builder";
 import { TextExtractorManager } from "app/infrastructure/text-extractor";
 import { MimeType } from "app/domain/text-extractor/types";
+import * as process from "node:process";
 
 @Injectable()
 export class ConvertToExcelUseCase {
@@ -23,10 +24,9 @@ export class ConvertToExcelUseCase {
     public async execute(input: { file: InternalFile }): Promise<string> {
         const fileName = `${Date.now()}-${input.file.originalName}`;
 
-        const tempPath = path.join("/home/muhammad/me/bankstatementtoexcel", "tmp", fileName);
+        const tempPath = path.join(`${process.env.BASE_PATH}`, "tmp", fileName);
 
         await fs.writeFile(tempPath, input.file.buffer);
-
         const outputPath = await this.processFile(tempPath, fileName);
 
         await fs.unlink(tempPath);
@@ -34,7 +34,7 @@ export class ConvertToExcelUseCase {
         return outputPath;
     }
 
-    public async processFile(filePath: string, fileName: string): Promise<string> {
+    private async processFile(filePath: string, fileName: string): Promise<string> {
         const mimeType = mime.lookup(filePath);
 
         const textExtractor = this.textExtractorManager.setExtractor(mimeType as MimeType);
@@ -44,9 +44,11 @@ export class ConvertToExcelUseCase {
             LanguageModelNames.ChatGPT,
         );
 
+        console.time("chatgpt");
         const response = await Promise.all(
             pages.map((chunk) => languageModel.extractTransactionsFromText(chunk)),
         );
+        console.timeEnd("chatgpt");
 
         const result: Transaction[] = [];
 
