@@ -17,8 +17,9 @@ export class TextExtractorManager {
             return this.textPdfExtractor;
         }
 
-        if (mimeType === MimeType.JPEG || mimeType === MimeType.PNG || mimeType === MimeType.JPG)
+        if (mimeType === MimeType.JPEG || mimeType === MimeType.PNG || mimeType === MimeType.JPG) {
             return this.textImageExtractor;
+        }
 
         throw `Unsupported mime type: ${mimeType}`;
     }
