@@ -1,0 +1,20 @@
+import { UserPlan } from "app/domain";
+
+export type User = {
+    id: string;
+    name: string | null;
+    email: string | null;
+    isActive: boolean;
+    oauth: {
+        googleId: string;
+    };
+    limits: {
+        pages: {
+            available: number;
+            max: number;
+        };
+    };
+    plan: UserPlan;
+    createdAt: string;
+    updatedAt: string;
+};
