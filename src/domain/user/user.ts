@@ -15,6 +15,4 @@ export type User = {
         };
     };
     plan: UserPlan;
-    createdAt: string;
-    updatedAt: string;
 };
