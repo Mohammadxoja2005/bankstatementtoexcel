@@ -33,7 +33,6 @@ export class UserAuthenticateUseCase {
 
         const foundUser = await this.userRepository.getUserByGoogleId(user.googleId);
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
         const accessToken: string = sign({ userId: foundUser.id }, `${process.env.JWT_SECRET_KEY}`);
 
         return { user: foundUser, token: accessToken };
