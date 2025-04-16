@@ -17,8 +17,6 @@ export const UserSchema = new Schema<UserHydratedDocument>(
             },
         },
         plan: String,
-        updated_at: Date,
-        created_at: Date,
     },
     {
         timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
