@@ -1,5 +1,5 @@
 export enum UserPlan {
-    BASIC = "starter",
+    STARTER = "starter",
     PRO = "professional",
     BUSINESS = "business",
 }
