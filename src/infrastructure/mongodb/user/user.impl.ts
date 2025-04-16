@@ -13,6 +13,14 @@ export class UserRepositoryImpl implements UserRepository {
     ) {}
 
     public async create(user: User): Promise<void> {
+        const isUserExists = await this.model.findOne<UserDocument>({
+            "oauth.google_id": user.oauth.googleId,
+        });
+
+        if (isUserExists) {
+            return;
+        }
+
         await this.model.create<UserCreateDocument>({
             name: user.name,
             email: user.email,
