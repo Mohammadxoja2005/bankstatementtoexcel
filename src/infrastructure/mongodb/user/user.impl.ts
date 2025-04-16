@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { User, UserRepository } from "app/domain";
 import { Model, Types } from "mongoose";
 import { Collections } from "app/infrastructure/schema";
@@ -30,6 +30,16 @@ export class UserRepositoryImpl implements UserRepository {
         });
     }
 
+    public async getUserByGoogleId(id: string): Promise<User> {
+        const document = await this.model.findOne<UserDocument>({ "oauth.google_id": id });
+
+        if (!document) {
+            throw new NotFoundException("User not found");
+        }
+
+        return this.documentToEntity(document);
+    }
+
     public async getById(id: string): Promise<User> {
         const document = await this.model.findOne({ _id: new Types.ObjectId(id) });
 
@@ -42,7 +52,7 @@ export class UserRepositoryImpl implements UserRepository {
 
     private documentToEntity(document: UserDocument): User {
         return {
-            id: document.id.toString(),
+            id: document._id.toString(),
             name: document.name,
             email: document.email,
             isActive: document.is_active,

@@ -2,7 +2,7 @@ import { HydratedDocument, Types } from "mongoose";
 import { UserPlan } from "app/domain";
 
 export type UserDocument = {
-    id: Types.ObjectId;
+    _id: Types.ObjectId;
     name: string | null;
     email: string | null;
     is_active: boolean;
@@ -20,6 +20,6 @@ export type UserDocument = {
     updated_at: string;
 };
 
-export type UserCreateDocument = Omit<UserDocument, "id" | "created_at" | "updated_at">;
+export type UserCreateDocument = Omit<UserDocument, "_id" | "created_at" | "updated_at">;
 
 export type UserHydratedDocument = HydratedDocument<UserDocument>;

@@ -11,4 +11,7 @@ export const Infrastructure = {
         Image: Symbol.for("TextExtractorImage"),
         Manager: Symbol.for("TextExtractorManager"),
     },
+    Repository: {
+        User: Symbol.for("UserRepository"),
+    },
 };
