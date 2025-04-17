@@ -26,8 +26,8 @@ export class UserAuthenticateUseCase {
                 plan: UserPlan.TRIAL,
                 limits: {
                     pages: {
-                        available: 100,
-                        max: 100,
+                        available: 10,
+                        max: 10,
                     },
                 },
             });

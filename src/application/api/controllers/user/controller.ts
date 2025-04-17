@@ -10,9 +10,9 @@ type AuthenticatedRequest = Request & {
     };
 };
 
-@Controller("auth")
-export class AuthController {
-    constructor(private readonly authenticateUserUseCase: UserAuthenticateUseCase) {}
+@Controller("user")
+export class UserController {
+    constructor(private readonly userAuthenticateUseCase: UserAuthenticateUseCase) {}
 
     @Get("google")
     @UseGuards(AuthGuard("google"))
@@ -24,7 +24,7 @@ export class AuthController {
         @Req() request: AuthenticatedRequest,
         @Res() response: Response,
     ): Promise<void> {
-        const user = await this.authenticateUserUseCase.execute({
+        const user = await this.userAuthenticateUseCase.execute({
             name: request.user._json.name ?? null,
             email: request.user._json.email ?? null,
             googleId: request.user.id,

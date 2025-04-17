@@ -1,9 +1,12 @@
-import {Module} from '@nestjs/common';
-import {InfrastructureModule} from "app/infrastructure/module";
-import {ApplicationModule} from "app/application/module";
+import { Module } from "@nestjs/common";
+import {
+    TextExtractorModule,
+    FileBuilderModule,
+    LanguageModelModule,
+    ConverterModule,
+} from "app/application/common";
 
 @Module({
-    imports: [ApplicationModule, InfrastructureModule],
+    imports: [ConverterModule, TextExtractorModule, FileBuilderModule, LanguageModelModule],
 })
-export class AppModule {
-}
+export class AppModule {}
