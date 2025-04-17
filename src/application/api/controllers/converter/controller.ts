@@ -1,5 +1,5 @@
 import { Controller, Post, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { ConvertToExcelUseCase } from "../../usecases/converter/convert-to-excel";
+import { ConvertToExcelUseCase } from "../../../usecases/converter/convert-to-excel";
 import { Response } from "express";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { MulterFile } from "app/domain";

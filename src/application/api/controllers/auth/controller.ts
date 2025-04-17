@@ -1,0 +1,35 @@
+import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
+import { UserAuthenticateUseCase } from "app/application/usecases/user/authenticate";
+import { AuthGuard } from "@nestjs/passport";
+import { Response } from "express";
+
+interface AuthenticatedRequest extends Request {
+    user: {
+        id: string;
+        _json: { name?: string; email?: string; email_verified?: boolean };
+    };
+}
+
+@Controller("auth")
+export class AuthController {
+    constructor(private readonly authenticateUserUseCase: UserAuthenticateUseCase) {}
+
+    @Get("google")
+    @UseGuards(AuthGuard("google"))
+    async googleAuth() {}
+
+    @Get("google/callback")
+    @UseGuards(AuthGuard("google"))
+    async googleAuthCallback(
+        @Req() request: AuthenticatedRequest,
+        @Res() response: Response,
+    ): Promise<void> {
+        const user = await this.authenticateUserUseCase.execute({
+            name: request.user._json.name ?? null,
+            email: request.user._json.email ?? null,
+            googleId: request.user.id,
+        });
+
+        response.json(user);
+    }
+}

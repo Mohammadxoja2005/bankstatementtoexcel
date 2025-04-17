@@ -15,26 +15,33 @@ export class UserAuthenticateUseCase {
         email: string | null;
         googleId: string;
     }): Promise<{ user: User; token: string }> {
-        await this.userRepository.create({
-            name: user.name,
-            email: user.email,
-            isActive: true,
-            oauth: {
-                googleId: user.googleId,
-            },
-            plan: UserPlan.TRIAL,
-            limits: {
-                pages: {
-                    available: 100,
-                    max: 100,
+        try {
+            await this.userRepository.create({
+                name: user.name,
+                email: user.email,
+                isActive: true,
+                oauth: {
+                    googleId: user.googleId,
                 },
-            },
-        });
+                plan: UserPlan.TRIAL,
+                limits: {
+                    pages: {
+                        available: 100,
+                        max: 100,
+                    },
+                },
+            });
 
-        const foundUser = await this.userRepository.getUserByGoogleId(user.googleId);
+            const foundUser = await this.userRepository.getUserByGoogleId(user.googleId);
 
-        const accessToken: string = sign({ userId: foundUser.id }, `${process.env.JWT_SECRET_KEY}`);
+            const accessToken: string = sign(
+                { userId: foundUser.id },
+                `${process.env.JWT_SECRET_KEY}`,
+            );
 
-        return { user: foundUser, token: accessToken };
+            return { user: foundUser, token: accessToken };
+        } catch (error) {
+            throw new Error("Error in authenticating user", { cause: error });
+        }
     }
 }
