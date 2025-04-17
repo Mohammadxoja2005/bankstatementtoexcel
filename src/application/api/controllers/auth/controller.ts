@@ -3,12 +3,12 @@ import { UserAuthenticateUseCase } from "app/application/usecases/user/authentic
 import { AuthGuard } from "@nestjs/passport";
 import { Response } from "express";
 
-interface AuthenticatedRequest extends Request {
+type AuthenticatedRequest = Request & {
     user: {
         id: string;
         _json: { name?: string; email?: string; email_verified?: boolean };
     };
-}
+};
 
 @Controller("auth")
 export class AuthController {

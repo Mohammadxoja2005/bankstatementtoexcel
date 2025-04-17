@@ -1,6 +1,6 @@
 export type InternalFile = {
-  originalName: string;
-  mimeType: string;
-  buffer: Buffer;
-  size: number;
+    originalName: string;
+    mimeType: string;
+    buffer: Buffer;
+    size: number;
 };
