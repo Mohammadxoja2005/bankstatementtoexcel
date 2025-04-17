@@ -1,6 +1,6 @@
 import { UserPlan } from "app/domain";
 
-export interface SubscriptionStrategy {
+export interface PaymentProcessorStrategy {
     createCheckoutLink(
         subscriptionInfo: {
             product: {

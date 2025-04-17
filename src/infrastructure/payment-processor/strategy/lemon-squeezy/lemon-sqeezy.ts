@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { SubscriptionStrategy, UserPlan } from "app/domain";
+import { PaymentProcessorStrategy, UserPlan } from "app/domain";
 import axios from "axios";
 import * as process from "node:process";
 
 @Injectable()
-export class SubscriptionLemonSqueezy implements SubscriptionStrategy {
+export class PaymentProcessorLemonSqueezy implements PaymentProcessorStrategy {
     private readonly baseUrl = "https://api.lemonsqueezy.com/v1";
 
     public async createCheckoutLink(

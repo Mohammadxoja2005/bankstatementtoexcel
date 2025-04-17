@@ -3,4 +3,4 @@ export * from "./language-model";
 export * from "./text-extractor";
 export * from "./transaction";
 export * from "./user";
-export * from "./subscription";
+export * from "./payment-processor";
