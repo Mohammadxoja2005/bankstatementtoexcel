@@ -11,6 +11,10 @@ export const Infrastructure = {
         Image: Symbol.for("TextExtractorImage"),
         Manager: Symbol.for("TextExtractorManager"),
     },
+    PaymentProcessor: {
+        LemonSqueezy: Symbol.for("PaymentProcessorLemonSqueezy"),
+        Manager: Symbol.for("PaymentProcessorManager"),
+    },
     Repository: {
         User: Symbol.for("UserRepository"),
     },
