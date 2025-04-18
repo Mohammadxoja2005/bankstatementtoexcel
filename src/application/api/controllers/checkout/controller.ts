@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
-import { SubscriptionCreateCheckoutLinkUseCase } from "app/application/usecases/subcription/create-checkout-link";
+import { CheckoutCreateLinkUseCase } from "src/application/usecases/checkout/create-link";
 import { AuthGuard } from "app/application/api/guard";
 import { decode, JwtPayload } from "jsonwebtoken";
 import { Request, Response } from "express";
@@ -7,20 +7,20 @@ import { UserPlan } from "app/domain";
 import { LemonSqueezyProductId } from "app/domain/payment-processor/strategy/lemon-squeezy";
 
 @UseGuards(AuthGuard)
-@Controller("subscription")
-export class SubscriptionController {
+@Controller("checkout")
+export class CheckoutController {
     constructor(
-        private readonly subscriptionCreateCheckoutLinkUseCase: SubscriptionCreateCheckoutLinkUseCase,
+        private readonly checkoutCreateLinkUseCase: CheckoutCreateLinkUseCase,
     ) {}
 
-    @Post("/create-checkout-link/starter")
+    @Post("/create-link/starter")
     async createCheckoutLinkStarter(
         @Req() request: Request,
         @Res() response: Response,
     ): Promise<void> {
         const { userId, email } = decode(request.header("Token") as string) as JwtPayload;
 
-        const checkoutUrl = await this.subscriptionCreateCheckoutLinkUseCase.execute(
+        const checkoutUrl = await this.checkoutCreateLinkUseCase.execute(
             {
                 product: {
                     id: LemonSqueezyProductId.STARTER,
@@ -38,14 +38,14 @@ export class SubscriptionController {
         response.redirect(checkoutUrl);
     }
 
-    @Post("/create-checkout-link/business")
+    @Post("/create-link/business")
     async createCheckoutLinkBusiness(
         @Req() request: Request,
         @Res() response: Response,
     ): Promise<void> {
         const { userId, email } = decode(request.header("Token") as string) as JwtPayload;
 
-        const checkoutUrl = await this.subscriptionCreateCheckoutLinkUseCase.execute(
+        const checkoutUrl = await this.checkoutCreateLinkUseCase.execute(
             {
                 product: {
                     id: LemonSqueezyProductId.BUSINESS,
@@ -63,14 +63,14 @@ export class SubscriptionController {
         response.redirect(checkoutUrl);
     }
 
-    @Post("/create-checkout-link/professional")
+    @Post("/create-link/professional")
     async createCheckoutLinkProfessional(
         @Req() request: Request,
         @Res() response: Response,
     ): Promise<void> {
         const { userId, email } = decode(request.header("Token") as string) as JwtPayload;
 
-        const checkoutUrl = await this.subscriptionCreateCheckoutLinkUseCase.execute(
+        const checkoutUrl = await this.checkoutCreateLinkUseCase.execute(
             {
                 product: {
                     id: LemonSqueezyProductId.PROFESSIONAL,
@@ -94,9 +94,9 @@ export class SubscriptionController {
 
         // Perform your business logic based on payment status
         if (paymentStatus === "paid") {
-            // Update the user's subscription to active or grant access
-            console.log("Payment successful. Activating user subscription...");
-            // You can use the user's email or subscription ID to update the user record in your DB
+            // Update the user's checkout to active or grant access
+            console.log("Payment successful. Activating user checkout...");
+            // You can use the user's email or checkout ID to update the user record in your DB
             // this.userService.activateSubscription(payload.data.email);
         } else if (paymentStatus === "failed") {
             // Handle payment failure, maybe notify the user or retry

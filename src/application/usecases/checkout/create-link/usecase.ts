@@ -5,7 +5,7 @@ import { PaymentProcessorNames } from "app/domain/payment-processor/strategy/typ
 import { UserPlan } from "app/domain";
 
 @Injectable()
-export class SubscriptionCreateCheckoutLinkUseCase {
+export class CheckoutCreateLinkUseCase {
     constructor(
         @Inject(Infrastructure.PaymentProcessor.Manager)
         private readonly paymentProcessorManager: PaymentProcessorManager,
