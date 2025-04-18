@@ -1,15 +1,19 @@
-import { Controller, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, Inject, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { CheckoutCreateLinkUseCase } from "src/application/usecases/checkout/create-link";
 import { AuthGuard } from "app/application/api/guard";
 import { decode, JwtPayload } from "jsonwebtoken";
 import { Request, Response } from "express";
 import { UserPlan } from "app/domain";
 import { LemonSqueezyProductId } from "app/domain/payment-processor/strategy/lemon-squeezy";
+import { Infrastructure } from "app/common";
 
 @UseGuards(AuthGuard)
 @Controller("checkout")
 export class CheckoutController {
-    constructor(private readonly checkoutCreateLinkUseCase: CheckoutCreateLinkUseCase) {}
+    constructor(
+        @Inject(Infrastructure.PaymentProcessor.Manager)
+        private readonly checkoutCreateLinkUseCase: CheckoutCreateLinkUseCase,
+    ) {}
 
     @Post("/create-link/starter")
     async createCheckoutLinkStarter(
