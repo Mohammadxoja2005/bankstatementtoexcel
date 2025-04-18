@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { CheckoutCreateLinkUseCase } from "src/application/usecases/checkout/create-link";
 import { AuthGuard } from "app/application/api/guard";
 import { decode, JwtPayload } from "jsonwebtoken";
