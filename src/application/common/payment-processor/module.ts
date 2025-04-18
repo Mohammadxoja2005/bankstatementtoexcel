@@ -4,7 +4,6 @@ import { PaymentProcessorLemonSqueezy } from "app/infrastructure/payment-process
 import { Infrastructure } from "app/common";
 
 @Module({
-    imports: [],
     providers: [
         {
             provide: Infrastructure.PaymentProcessor.Manager,

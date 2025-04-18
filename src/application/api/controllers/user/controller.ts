@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { UserAuthenticateUseCase } from "app/application/usecases/user/authenticate";
 import { AuthGuard } from "@nestjs/passport";
 import { Response } from "express";
@@ -14,7 +14,7 @@ type AuthenticatedRequest = Request & {
 export class UserController {
     constructor(private readonly userAuthenticateUseCase: UserAuthenticateUseCase) {}
 
-    @Get("google")
+    @Post("google")
     @UseGuards(AuthGuard("google"))
     async googleAuth() {}
 
