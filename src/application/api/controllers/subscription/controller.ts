@@ -1,11 +1,11 @@
-import { Body, Controller, Get } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 
 @Controller("subscription")
-export class SubscrtiptionController {
+export class SubscriptionController {
     constructor() {}
 
-    @Get("webhook/callback")
-    async webhookCallback(@Body() payload: any, @Headers("X-Signature") signature: string) {
+    @Post("webhook/payment")
+    async handlePaymentStatus(@Body() payload: any, @Headers("X-Signature") signature: string) {
         const paymentStatus = payload.data.status; // Example: 'paid', 'failed', 'pending'
 
         // Perform your business logic based on payment status
