@@ -10,10 +10,7 @@ import { Infrastructure } from "app/common";
 @UseGuards(AuthGuard)
 @Controller("checkout")
 export class CheckoutController {
-    constructor(
-        @Inject(Infrastructure.PaymentProcessor.Manager)
-        private readonly checkoutCreateLinkUseCase: CheckoutCreateLinkUseCase,
-    ) {}
+    constructor(private readonly checkoutCreateLinkUseCase: CheckoutCreateLinkUseCase) {}
 
     @Post("/create-link/starter")
     async createCheckoutLinkStarter(
@@ -21,6 +18,8 @@ export class CheckoutController {
         @Res() response: Response,
     ): Promise<void> {
         const { userId, email } = decode(request.header("Token") as string) as JwtPayload;
+        console.log("userId", userId);
+        console.log("email", email);
 
         const checkoutUrl = await this.checkoutCreateLinkUseCase.execute(
             {
@@ -36,7 +35,8 @@ export class CheckoutController {
                 plan: UserPlan.STARTER,
             },
         );
-
+        // console.log("checkout url", checkou);
+        // response.json(checkoutUrl);
         response.redirect(checkoutUrl);
     }
 

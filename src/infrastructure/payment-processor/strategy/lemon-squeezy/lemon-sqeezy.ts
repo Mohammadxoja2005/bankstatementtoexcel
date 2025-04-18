@@ -24,17 +24,42 @@ export class PaymentProcessorLemonSqueezy implements PaymentProcessorStrategy {
         const response = await axios.post(
             `${this.baseUrl}/checkouts`,
             {
-                product_id: subscriptionInfo.product.id,
-                email: subscriptionInfo.customer.email,
-                metadata: metadata,
+                data: {
+                    type: "checkouts",
+                    attributes: {
+                        store_id: 158685,
+                        variant_id: 766751,
+                        checkout_data: {
+                            email: subscriptionInfo.customer.email,
+                            custom: metadata,
+                        },
+                    },
+                    relationships: {
+                        store: {
+                            data: {
+                                id: "158685",
+                                type: "stores",
+                            },
+                        },
+                        variant: {
+                            data: {
+                                id: "766751",
+                                type: "variants",
+                            },
+                        },
+                    },
+                },
             },
             {
                 headers: {
                     Authorization: `Bearer ${process.env.LEMON_SQUEEZY_KEY}`,
                 },
+                timeout: 10000,
             },
         );
 
-        return response.data.checkout_url;
+        console.log("response", response.data.data.attributes);
+
+        return response.data.data.attributes.url;
     }
 }
