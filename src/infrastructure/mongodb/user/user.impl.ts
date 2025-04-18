@@ -38,7 +38,7 @@ export class UserRepositoryImpl implements UserRepository {
         });
     }
 
-    public async getUserByGoogleId(id: string): Promise<User> {
+    public async getByGoogleId(id: string): Promise<User> {
         const document = await this.model.findOne<UserDocument>({ "oauth.google_id": id });
 
         if (!document) {

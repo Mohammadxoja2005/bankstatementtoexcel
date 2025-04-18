@@ -5,5 +5,5 @@ export interface UserRepository {
 
     getById(id: string): Promise<User | null>;
 
-    getUserByGoogleId: (id: string) => Promise<User>;
+    getByGoogleId: (id: string) => Promise<User>;
 }

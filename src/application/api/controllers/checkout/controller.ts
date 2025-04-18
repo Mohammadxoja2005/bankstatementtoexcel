@@ -9,9 +9,7 @@ import { LemonSqueezyProductId } from "app/domain/payment-processor/strategy/lem
 @UseGuards(AuthGuard)
 @Controller("checkout")
 export class CheckoutController {
-    constructor(
-        private readonly checkoutCreateLinkUseCase: CheckoutCreateLinkUseCase,
-    ) {}
+    constructor(private readonly checkoutCreateLinkUseCase: CheckoutCreateLinkUseCase) {}
 
     @Post("/create-link/starter")
     async createCheckoutLinkStarter(
@@ -86,23 +84,5 @@ export class CheckoutController {
         );
 
         response.redirect(checkoutUrl);
-    }
-
-    @Get("webhook/callback")
-    async webhookCallback(@Body() payload: any, @Headers("X-Signature") signature: string) {
-        const paymentStatus = payload.data.status; // Example: 'paid', 'failed', 'pending'
-
-        // Perform your business logic based on payment status
-        if (paymentStatus === "paid") {
-            // Update the user's checkout to active or grant access
-            console.log("Payment successful. Activating user checkout...");
-            // You can use the user's email or checkout ID to update the user record in your DB
-            // this.userService.activateSubscription(payload.data.email);
-        } else if (paymentStatus === "failed") {
-            // Handle payment failure, maybe notify the user or retry
-            console.log("Payment failed. Notifying the user...");
-        }
-
-        return { message: "Webhook processed successfully" };
     }
 }
