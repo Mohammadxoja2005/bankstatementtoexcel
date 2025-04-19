@@ -28,5 +28,6 @@ import { UserSchema } from "app/infrastructure/mongodb/user/schema";
         UserAuthenticateUseCase,
     ],
     controllers: [UserController],
+    exports: [Infrastructure.Repository.User],
 })
 export class UserModule {}

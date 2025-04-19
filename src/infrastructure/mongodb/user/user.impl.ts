@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { User, UserRepository } from "app/domain";
+import { User, UserPlan, UserRepository } from "app/domain";
 import { Model, Types } from "mongoose";
 import { Collections } from "app/infrastructure/schema";
 import { UserCreateDocument, UserDocument, UserHydratedDocument } from "./document";
@@ -56,6 +56,20 @@ export class UserRepositoryImpl implements UserRepository {
         }
 
         return this.documentToEntity(document);
+    }
+
+    public async updatePlan(user: {
+        id: string;
+        plan: UserPlan;
+        limits: { pages: { available: number; max: number } };
+    }): Promise<void> {
+        await this.model.updateOne(
+            { _id: new Types.ObjectId(user.id) },
+            {
+                plan: user.plan,
+                "limits.pages": user.limits.pages,
+            },
+        );
     }
 
     private documentToEntity(document: UserDocument): User {
