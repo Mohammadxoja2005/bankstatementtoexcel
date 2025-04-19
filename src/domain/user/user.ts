@@ -1,4 +1,4 @@
-import { UserPlan } from "app/domain";
+import { UserSubscription } from "app/domain";
 
 export type User = {
     id: string;
@@ -14,5 +14,5 @@ export type User = {
             max: number;
         };
     };
-    plan: UserPlan;
+    subscription: UserSubscription;
 };

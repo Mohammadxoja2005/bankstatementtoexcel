@@ -16,7 +16,10 @@ export const UserSchema = new Schema<UserHydratedDocument>(
                 max: Number,
             },
         },
-        plan: String,
+        subscription: {
+            id: { type: String, default: null },
+            plan: String,
+        },
     },
     {
         timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

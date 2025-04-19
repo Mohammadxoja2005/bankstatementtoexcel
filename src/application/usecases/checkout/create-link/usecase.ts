@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Infrastructure } from "app/common";
 import { PaymentProcessorManager } from "app/infrastructure/payment-processor/manager";
 import { PaymentProcessorNames } from "app/domain/payment-processor/strategy/types";
-import { UserPlan } from "app/domain";
+import { UserSubscriptionPlan } from "app/domain";
 
 @Injectable()
 export class CheckoutCreateLinkUseCase {
@@ -26,7 +26,7 @@ export class CheckoutCreateLinkUseCase {
         },
         metadata: {
             userId: string;
-            plan: UserPlan;
+            plan: UserSubscriptionPlan;
         },
     ): Promise<string> {
         try {

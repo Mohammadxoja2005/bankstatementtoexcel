@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Infrastructure } from "app/common";
-import { User, UserPlan, UserRepository } from "app/domain";
+import { User, UserRepository, UserSubscriptionPlan } from "app/domain";
 import { sign } from "jsonwebtoken";
 
 @Injectable()
@@ -23,7 +23,10 @@ export class UserAuthenticateUseCase {
                 oauth: {
                     googleId: user.googleId,
                 },
-                plan: UserPlan.TRIAL,
+                subscription: {
+                    id: null,
+                    plan: UserSubscriptionPlan.TRIAL,
+                },
                 limits: {
                     pages: {
                         available: 10,

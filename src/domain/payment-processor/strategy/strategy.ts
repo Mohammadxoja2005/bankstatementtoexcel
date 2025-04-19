@@ -1,4 +1,4 @@
-import { UserPlan } from "app/domain";
+import { UserSubscriptionPlan } from "app/domain";
 
 export interface PaymentProcessorStrategy {
     createCheckoutLink(
@@ -16,7 +16,7 @@ export interface PaymentProcessorStrategy {
         },
         metadata: {
             userId: string;
-            plan: UserPlan;
+            plan: UserSubscriptionPlan;
         },
     ): Promise<string>;
 }

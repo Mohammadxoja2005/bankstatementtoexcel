@@ -3,7 +3,7 @@ import { CheckoutCreateLinkUseCase } from "src/application/usecases/checkout/cre
 import { AuthGuard } from "app/application/api/guard";
 import { decode, JwtPayload } from "jsonwebtoken";
 import { Request, Response } from "express";
-import { UserPlan, LemonSqueezySubscription } from "app/domain";
+import { UserSubscriptionPlan, LemonSqueezySubscription } from "app/domain";
 
 @UseGuards(AuthGuard)
 @Controller("checkout")
@@ -32,7 +32,7 @@ export class CheckoutController {
             },
             {
                 userId: userId,
-                plan: UserPlan.STARTER,
+                plan: UserSubscriptionPlan.STARTER,
             },
         );
 
@@ -61,7 +61,7 @@ export class CheckoutController {
             },
             {
                 userId: userId,
-                plan: UserPlan.BUSINESS,
+                plan: UserSubscriptionPlan.BUSINESS,
             },
         );
 
@@ -90,7 +90,7 @@ export class CheckoutController {
             },
             {
                 userId: userId,
-                plan: UserPlan.PROFESSIONAL,
+                plan: UserSubscriptionPlan.PROFESSIONAL,
             },
         );
 

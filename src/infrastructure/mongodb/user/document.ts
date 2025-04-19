@@ -1,5 +1,5 @@
 import { HydratedDocument, Types } from "mongoose";
-import { UserPlan } from "app/domain";
+import { UserSubscription } from "app/domain";
 
 export type UserDocument = {
     _id: Types.ObjectId;
@@ -15,7 +15,7 @@ export type UserDocument = {
             max: number;
         };
     };
-    plan: UserPlan;
+    subscription: UserSubscription;
     created_at: string;
     updated_at: string;
 };

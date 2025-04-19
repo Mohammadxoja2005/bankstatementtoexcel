@@ -1,6 +1,6 @@
 import { Controller, Headers, Inject, Post, RawBodyRequest, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
-import { LemonSqueezyEvent, LemonSqueezyTransaction, UserPlan } from "app/domain";
+import { LemonSqueezyEvent, LemonSqueezyTransaction, UserSubscriptionPlan } from "app/domain";
 import * as crypto from "node:crypto";
 import * as process from "node:process";
 import { Application } from "app/common";
@@ -26,6 +26,8 @@ export class SubscriptionController {
     ) {
         const transaction: LemonSqueezyTransaction = request.body;
 
+        console.log("transaction", transaction);
+
         const hmac = crypto.createHmac("sha256", process.env.LEMON_SQUEEZY_WEBHOOK_SIGNATURE || "");
 
         const digest = Buffer.from(hmac.update(request.rawBody || "").digest("hex"), "utf8");
@@ -44,10 +46,14 @@ export class SubscriptionController {
         ) {
             const userId = transaction.meta.custom_data.userId;
             const plan = transaction.meta.custom_data.plan;
+            const subscriptionId = transaction.data.id;
 
             await this.subscriptionActivateUseCase.execute({
                 id: userId,
-                plan: plan,
+                subscription: {
+                    id: subscriptionId,
+                    plan: plan,
+                },
             });
         }
 
@@ -59,7 +65,15 @@ export class SubscriptionController {
         ) {
             const userId = transaction.meta.custom_data.userId;
 
-            await this.subscriptionDeactivateUseCase.execute({ id: userId, plan: UserPlan.TRIAL });
+            await this.subscriptionDeactivateUseCase.execute({
+                id: userId,
+                subscription: {
+                    id: null,
+                    plan: UserSubscriptionPlan.TRIAL,
+                },
+            });
         }
+
+        response.status(200).send("Webhook received successfully");
     }
 }

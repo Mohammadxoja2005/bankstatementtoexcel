@@ -1,4 +1,4 @@
-export enum UserPlan {
+export enum UserSubscriptionPlan {
     TRIAL = "trial",
     STARTER = "starter",
     PROFESSIONAL = "professional",

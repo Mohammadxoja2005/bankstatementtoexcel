@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { User, UserPlan, UserRepository } from "app/domain";
+import { User, UserRepository, UserSubscriptionPlan } from "app/domain";
 import { Model, Types } from "mongoose";
 import { Collections } from "app/infrastructure/schema";
 import { UserCreateDocument, UserDocument, UserHydratedDocument } from "./document";
@@ -34,7 +34,10 @@ export class UserRepositoryImpl implements UserRepository {
                     max: user.limits.pages.max,
                 },
             },
-            plan: user.plan,
+            subscription: {
+                id: null,
+                plan: user.subscription.plan,
+            },
         });
     }
 
@@ -60,13 +63,16 @@ export class UserRepositoryImpl implements UserRepository {
 
     public async updatePlan(user: {
         id: string;
-        plan: UserPlan;
+        subscription: {
+            id: string | null;
+            plan: UserSubscriptionPlan;
+        };
         limits: { pages: { available: number; max: number } };
     }): Promise<void> {
         await this.model.updateOne(
             { _id: new Types.ObjectId(user.id) },
             {
-                plan: user.plan,
+                subscription: user.subscription,
                 "limits.pages": user.limits.pages,
             },
         );
@@ -87,7 +93,10 @@ export class UserRepositoryImpl implements UserRepository {
                     max: document.limits.pages.max,
                 },
             },
-            plan: document.plan,
+            subscription: {
+                id: document.subscription.id,
+                plan: document.subscription.plan,
+            },
         };
     }
 }

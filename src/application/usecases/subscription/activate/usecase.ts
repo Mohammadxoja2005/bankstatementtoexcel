@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { UserPlan, UserRepository } from "app/domain";
+import { UserSubscriptionPlan, UserRepository } from "app/domain";
 import { Infrastructure } from "app/common";
 
 @Injectable()
@@ -9,30 +9,36 @@ export class SubscriptionActivateUseCase {
         private readonly userRepository: UserRepository,
     ) {}
 
-    public async execute(user: { id: string; plan: UserPlan }): Promise<void> {
+    public async execute(user: {
+        id: string;
+        subscription: { id: string; plan: UserSubscriptionPlan };
+    }): Promise<void> {
         const foundUser = await this.userRepository.getById(user.id);
 
         if (!foundUser) {
             throw new Error("User not found");
         }
 
-        if (user.plan === UserPlan.STARTER) {
+        if (user.subscription.plan === UserSubscriptionPlan.STARTER) {
             await this.updatePlanToStarter(user);
         }
 
-        if (user.plan === UserPlan.PROFESSIONAL) {
+        if (user.subscription.plan === UserSubscriptionPlan.PROFESSIONAL) {
             await this.updatePlanToProfessional(user);
         }
 
-        if (user.plan === UserPlan.BUSINESS) {
+        if (user.subscription.plan === UserSubscriptionPlan.BUSINESS) {
             await this.updatePlanToBusiness(user);
         }
     }
 
-    private async updatePlanToStarter(user: { id: string; plan: UserPlan }): Promise<void> {
+    private async updatePlanToStarter(user: {
+        id: string;
+        subscription: { id: string; plan: UserSubscriptionPlan };
+    }): Promise<void> {
         await this.userRepository.updatePlan({
             id: user.id,
-            plan: user.plan,
+            subscription: user.subscription,
             limits: {
                 pages: {
                     available: 500,
@@ -42,10 +48,13 @@ export class SubscriptionActivateUseCase {
         });
     }
 
-    private async updatePlanToProfessional(user: { id: string; plan: UserPlan }): Promise<void> {
+    private async updatePlanToProfessional(user: {
+        id: string;
+        subscription: { id: string; plan: UserSubscriptionPlan };
+    }): Promise<void> {
         await this.userRepository.updatePlan({
             id: user.id,
-            plan: user.plan,
+            subscription: user.subscription,
             limits: {
                 pages: {
                     available: 2000,
@@ -55,10 +64,13 @@ export class SubscriptionActivateUseCase {
         });
     }
 
-    private async updatePlanToBusiness(user: { id: string; plan: UserPlan }): Promise<void> {
+    private async updatePlanToBusiness(user: {
+        id: string;
+        subscription: { id: string; plan: UserSubscriptionPlan };
+    }): Promise<void> {
         await this.userRepository.updatePlan({
             id: user.id,
-            plan: user.plan,
+            subscription: user.subscription,
             limits: {
                 pages: {
                     available: 5000,

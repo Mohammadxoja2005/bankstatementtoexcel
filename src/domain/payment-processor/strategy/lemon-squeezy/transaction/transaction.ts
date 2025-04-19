@@ -1,10 +1,10 @@
-import { LemonSqueezyEvent, UserPlan } from "app/domain";
+import { LemonSqueezyEvent, UserSubscriptionPlan } from "app/domain";
 
 export type LemonSqueezyTransaction = {
     meta: {
         test_mode: boolean;
         event_name: LemonSqueezyEvent;
-        custom_data: { plan: UserPlan; userId: string };
+        custom_data: { plan: UserSubscriptionPlan; userId: string };
         webhook_id: string;
     };
     data: {

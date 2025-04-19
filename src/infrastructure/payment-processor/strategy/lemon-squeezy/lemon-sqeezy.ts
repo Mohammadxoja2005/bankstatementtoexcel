@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PaymentProcessorStrategy, UserPlan } from "app/domain";
+import { PaymentProcessorStrategy, UserSubscriptionPlan } from "app/domain";
 import axios from "axios";
 import * as process from "node:process";
 
@@ -22,7 +22,7 @@ export class PaymentProcessorLemonSqueezy implements PaymentProcessorStrategy {
         },
         metadata: {
             userId: string;
-            plan: UserPlan;
+            plan: UserSubscriptionPlan;
         },
     ): Promise<string> {
         const response = await axios.post(
