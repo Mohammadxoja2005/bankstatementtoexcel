@@ -36,7 +36,7 @@ export class CheckoutController {
             },
         );
 
-        response.status(HttpStatus.OK).json({ checkoutUrl: checkoutUrl });
+        response.status(HttpStatus.OK).json({ checkout_url: checkoutUrl });
     }
 
     @Post("/create-link/business")
@@ -65,7 +65,7 @@ export class CheckoutController {
             },
         );
 
-        response.status(HttpStatus.OK).json({ checkoutUrl: checkoutUrl });
+        response.status(HttpStatus.OK).json({ checkout_url: checkoutUrl });
     }
 
     @Post("/create-link/professional")
@@ -94,6 +94,6 @@ export class CheckoutController {
             },
         );
 
-        response.status(HttpStatus.OK).json({ checkoutUrl: checkoutUrl });
+        response.status(HttpStatus.OK).json({ checkout_url: checkoutUrl });
     }
 }
