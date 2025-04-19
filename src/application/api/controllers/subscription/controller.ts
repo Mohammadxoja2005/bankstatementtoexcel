@@ -1,6 +1,6 @@
 import { Controller, Headers, Inject, Post, RawBodyRequest, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
-import { LemonSqueezyEvent, LemonSqueezyTransaction } from "app/domain";
+import { LemonSqueezyEvent, LemonSqueezyTransaction, UserPlan } from "app/domain";
 import * as crypto from "node:crypto";
 import * as process from "node:process";
 import { Application } from "app/common";
@@ -58,9 +58,8 @@ export class SubscriptionController {
             ].includes(transaction.meta.event_name)
         ) {
             const userId = transaction.meta.custom_data.userId;
-            const plan = transaction.meta.custom_data.plan;
 
-            await this.subscriptionDeactivateUseCase.execute({ id: userId, plan: plan });
+            await this.subscriptionDeactivateUseCase.execute({ id: userId, plan: UserPlan.TRIAL });
         }
     }
 }
