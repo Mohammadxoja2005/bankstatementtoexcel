@@ -9,7 +9,7 @@ export class SubscriptionActivateUseCase {
         private readonly userRepository: UserRepository,
     ) {}
 
-    public async execute(user: { id: string; plan: UserPlan }) {
+    public async execute(user: { id: string; plan: UserPlan }): Promise<void> {
         const foundUser = await this.userRepository.getById(user.id);
 
         if (!foundUser) {

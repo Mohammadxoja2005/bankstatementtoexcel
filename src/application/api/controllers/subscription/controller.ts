@@ -4,13 +4,18 @@ import { LemonSqueezyEvent, LemonSqueezyTransaction } from "app/domain";
 import * as crypto from "node:crypto";
 import * as process from "node:process";
 import { Application } from "app/common";
-import { SubscriptionActivateUseCase } from "app/application/usecases/subscription";
+import {
+    SubscriptionActivateUseCase,
+    SubscriptionDeactivateUseCase,
+} from "app/application/usecases/subscription";
 
 @Controller("subscription")
 export class SubscriptionController {
     constructor(
         @Inject(Application.UseCase.Subscription.Activate)
         private readonly subscriptionActivateUseCase: SubscriptionActivateUseCase,
+        @Inject(Application.UseCase.Subscription.Deactivate)
+        private readonly subscriptionDeactivateUseCase: SubscriptionDeactivateUseCase,
     ) {}
 
     @Post("webhook/payment")
@@ -44,6 +49,18 @@ export class SubscriptionController {
                 id: userId,
                 plan: plan,
             });
+        }
+
+        if (
+            [
+                LemonSqueezyEvent.SUBSCRIPTION_CANCELLED,
+                LemonSqueezyEvent.SUBSCRIPTION_PAYMENT_FAILED,
+            ].includes(transaction.meta.event_name)
+        ) {
+            const userId = transaction.meta.custom_data.userId;
+            const plan = transaction.meta.custom_data.plan;
+
+            await this.subscriptionDeactivateUseCase.execute({ id: userId, plan: plan });
         }
     }
 }
