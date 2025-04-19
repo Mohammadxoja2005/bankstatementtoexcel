@@ -63,8 +63,6 @@ export class PaymentProcessorLemonSqueezy implements PaymentProcessorStrategy {
             },
         );
 
-        console.log("response", response.data.data.attributes);
-
         return response.data.data.attributes.url;
     }
 }

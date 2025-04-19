@@ -14,7 +14,7 @@ type AuthenticatedRequest = Request & {
 export class UserController {
     constructor(private readonly userAuthenticateUseCase: UserAuthenticateUseCase) {}
 
-    @Post("google")
+    @Get("google")
     @UseGuards(AuthGuard("google"))
     async googleAuth() {}
 

@@ -1,4 +1,4 @@
-import { Controller, Inject, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, HttpStatus, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { CheckoutCreateLinkUseCase } from "src/application/usecases/checkout/create-link";
 import { AuthGuard } from "app/application/api/guard";
 import { decode, JwtPayload } from "jsonwebtoken";
@@ -36,7 +36,7 @@ export class CheckoutController {
             },
         );
 
-        response.redirect(checkoutUrl);
+        response.status(HttpStatus.OK).json({ checkoutUrl: checkoutUrl });
     }
 
     @Post("/create-link/business")
@@ -65,7 +65,7 @@ export class CheckoutController {
             },
         );
 
-        response.redirect(checkoutUrl);
+        response.status(HttpStatus.OK).json({ checkoutUrl: checkoutUrl });
     }
 
     @Post("/create-link/professional")
@@ -94,6 +94,6 @@ export class CheckoutController {
             },
         );
 
-        response.redirect(checkoutUrl);
+        response.status(HttpStatus.OK).json({ checkoutUrl: checkoutUrl });
     }
 }
