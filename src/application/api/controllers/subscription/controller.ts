@@ -1,5 +1,6 @@
 import { Controller, Post, Headers, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
+import { LemonSqueezyTransaction } from "app/domain";
 
 @Controller("subscription")
 export class SubscriptionController {
@@ -11,8 +12,10 @@ export class SubscriptionController {
         @Res() response: Response,
         @Headers("X-Signature") signature: string,
     ) {
-        // const paymentStatus = payload.data.status; // Example: 'paid', 'failed', 'pending'
-        console.log("payload webhook", request.body);
+        const transaction: LemonSqueezyTransaction = request.body;
+
+        console.log("payload webhook", transaction);
+
         // Perform your business logic based on payment status
         // if (paymentStatus === "paid") {
         //     // Update the user's checkout to active or grant access
