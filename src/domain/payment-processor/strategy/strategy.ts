@@ -3,11 +3,15 @@ import { UserPlan } from "app/domain";
 export interface PaymentProcessorStrategy {
     createCheckoutLink(
         subscriptionInfo: {
+            store: {
+                id: number;
+            };
             product: {
-                id: string;
+                id: number;
             };
             customer: {
                 email: string;
+                name: string;
             };
         },
         metadata: {

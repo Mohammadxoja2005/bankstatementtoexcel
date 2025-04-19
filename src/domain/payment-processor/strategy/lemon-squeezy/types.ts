@@ -1,5 +1,12 @@
-export enum LemonSqueezyProductId {
-    STARTER = "493252",
-    BUSINESS = "493259",
-    PROFESSIONAL = "493258",
-}
+export const LemonSqueezySubscription = {
+    Store: {
+        Id: 158685,
+    },
+    Product: {
+        Id: {
+            Starter: 766751,
+            Business: 766765,
+            Professional: 766764,
+        },
+    },
+};

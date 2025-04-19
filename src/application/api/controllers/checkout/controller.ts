@@ -3,9 +3,7 @@ import { CheckoutCreateLinkUseCase } from "src/application/usecases/checkout/cre
 import { AuthGuard } from "app/application/api/guard";
 import { decode, JwtPayload } from "jsonwebtoken";
 import { Request, Response } from "express";
-import { UserPlan } from "app/domain";
-import { LemonSqueezyProductId } from "app/domain/payment-processor/strategy/lemon-squeezy";
-import { Infrastructure } from "app/common";
+import { UserPlan, LemonSqueezySubscription } from "app/domain";
 
 @UseGuards(AuthGuard)
 @Controller("checkout")
@@ -17,17 +15,19 @@ export class CheckoutController {
         @Req() request: Request,
         @Res() response: Response,
     ): Promise<void> {
-        const { userId, email } = decode(request.header("Token") as string) as JwtPayload;
-        console.log("userId", userId);
-        console.log("email", email);
+        const { userId, email, name } = decode(request.header("Token") as string) as JwtPayload;
 
         const checkoutUrl = await this.checkoutCreateLinkUseCase.execute(
             {
+                store: {
+                    id: LemonSqueezySubscription.Store.Id,
+                },
                 product: {
-                    id: LemonSqueezyProductId.STARTER,
+                    id: LemonSqueezySubscription.Product.Id.Starter,
                 },
                 customer: {
                     email: email,
+                    name: name,
                 },
             },
             {
@@ -35,8 +35,7 @@ export class CheckoutController {
                 plan: UserPlan.STARTER,
             },
         );
-        // console.log("checkout url", checkou);
-        // response.json(checkoutUrl);
+
         response.redirect(checkoutUrl);
     }
 
@@ -45,15 +44,19 @@ export class CheckoutController {
         @Req() request: Request,
         @Res() response: Response,
     ): Promise<void> {
-        const { userId, email } = decode(request.header("Token") as string) as JwtPayload;
+        const { userId, email, name } = decode(request.header("Token") as string) as JwtPayload;
 
         const checkoutUrl = await this.checkoutCreateLinkUseCase.execute(
             {
+                store: {
+                    id: LemonSqueezySubscription.Store.Id,
+                },
                 product: {
-                    id: LemonSqueezyProductId.BUSINESS,
+                    id: LemonSqueezySubscription.Product.Id.Business,
                 },
                 customer: {
                     email: email,
+                    name: name,
                 },
             },
             {
@@ -70,15 +73,19 @@ export class CheckoutController {
         @Req() request: Request,
         @Res() response: Response,
     ): Promise<void> {
-        const { userId, email } = decode(request.header("Token") as string) as JwtPayload;
+        const { userId, email, name } = decode(request.header("Token") as string) as JwtPayload;
 
         const checkoutUrl = await this.checkoutCreateLinkUseCase.execute(
             {
+                store: {
+                    id: LemonSqueezySubscription.Store.Id,
+                },
                 product: {
-                    id: LemonSqueezyProductId.PROFESSIONAL,
+                    id: LemonSqueezySubscription.Product.Id.Professional,
                 },
                 customer: {
                     email: email,
+                    name: name,
                 },
             },
             {

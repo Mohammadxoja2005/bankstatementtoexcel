@@ -35,7 +35,7 @@ export class UserAuthenticateUseCase {
             const foundUser = await this.userRepository.getByGoogleId(user.googleId);
 
             const accessToken: string = sign(
-                { userId: foundUser.id, email: foundUser.email },
+                { userId: foundUser.id, email: foundUser.email, name: foundUser.name },
                 `${process.env.JWT_SECRET_KEY}`,
             );
 

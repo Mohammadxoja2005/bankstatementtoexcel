@@ -13,11 +13,15 @@ export class CheckoutCreateLinkUseCase {
 
     public async execute(
         subscriptionInfo: {
+            store: {
+                id: number;
+            };
             product: {
-                id: string;
+                id: number;
             };
             customer: {
                 email: string;
+                name: string;
             };
         },
         metadata: {

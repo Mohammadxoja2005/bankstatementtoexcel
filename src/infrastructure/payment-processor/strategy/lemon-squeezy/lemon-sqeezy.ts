@@ -9,11 +9,15 @@ export class PaymentProcessorLemonSqueezy implements PaymentProcessorStrategy {
 
     public async createCheckoutLink(
         subscriptionInfo: {
+            store: {
+                id: number;
+            };
             product: {
-                id: string;
+                id: number;
             };
             customer: {
                 email: string;
+                name: string;
             };
         },
         metadata: {
@@ -27,23 +31,24 @@ export class PaymentProcessorLemonSqueezy implements PaymentProcessorStrategy {
                 data: {
                     type: "checkouts",
                     attributes: {
-                        store_id: 158685,
-                        variant_id: 766751,
+                        store_id: subscriptionInfo.store.id,
+                        variant_id: subscriptionInfo.product.id,
                         checkout_data: {
                             email: subscriptionInfo.customer.email,
+                            name: subscriptionInfo.customer.name,
                             custom: metadata,
                         },
                     },
                     relationships: {
                         store: {
                             data: {
-                                id: "158685",
+                                id: subscriptionInfo.store.id.toString(),
                                 type: "stores",
                             },
                         },
                         variant: {
                             data: {
-                                id: "766751",
+                                id: subscriptionInfo.product.id.toString(),
                                 type: "variants",
                             },
                         },
